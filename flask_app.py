@@ -24,7 +24,7 @@ def login():
     return {
         'errCode': 500,
         'message': 'Internal Server Error'
-    }
+    }, 500
 
 
 @app.route('/api/Claim/GetClaim', methods=['GET'])
@@ -37,7 +37,7 @@ def get_claim_status():
         return {
             "errCode": "RAFER001",
             "msg": "Can not authorize"
-        }
+        }, 401
     errCodes = ['RAFER003', 'RAFER004', 'RAFOK001', 'RAFOK002', 'RAFOK001', 'RAFOK001']
     claim_status = ['Our records indicate that the claim may be too old or there is more than one claim registered '
                     'for this accident on our systems. Please contact our RAF Contact Centre on 087 820 1 111 for '
