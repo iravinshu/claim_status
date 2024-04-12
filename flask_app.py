@@ -1,17 +1,39 @@
+import string
+
 from flask import Flask, request
 from flask_cors import CORS
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 cors = CORS(app)
 
+tokens = []
 
-@app.route('/raf/claims_status/dummy', methods=['POST'])
-def get_claim_status():
+
+@app.route('/raf/login', methods=['POST'])
+def login():
     payload = request.json
+    if payload.get('user_name') and payload.get('password'):
+        now = datetime.now()
+        token_expiry = now + timedelta(minutes=10)
+        token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
+        tokens.append(token)
+        return {"token": token,
+                "expiry_time": token_expiry}
+    return {
+        'errCode': 500,
+        'message': 'Internal Server Error'
+    }
+
+
+@app.route('/api/Claim/GetClaim', methods=['GET'])
+def get_claim_status():
+    payload = request.args
+    payload = {key: value.strip() for key, value in payload.items()}
+    print(payload)
     headers = request.headers
-    if headers.get('Authorization') != 'abc':
+    if headers.get('Authorization') not in tokens:
         return {
             "errCode": "RAFER001",
             "msg": "Can not authorize"
