@@ -1,6 +1,5 @@
 import string
-
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_cors import CORS
 import random
 from datetime import datetime, timedelta
@@ -9,6 +8,11 @@ app = Flask(__name__)
 cors = CORS(app)
 
 tokens = []
+
+
+@app.route('/', methods=['GET'])
+def reroute():
+    return render_template('index.html')
 
 
 @app.route('/raf/login', methods=['POST'])
